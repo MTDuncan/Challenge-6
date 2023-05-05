@@ -1,5 +1,5 @@
 // Initialize variables
-var apiKey = "39aa6d2ce2b8bca312184e74e988036a3";
+var apiKey = "9aa6d2ce2b8bca312184e74e988036a3";
 var searchFormEl = document.querySelector("#search-form");
 var searchInputEl = document.querySelector("#search-input");
 var searchHistoryEl = document.querySelector("#history-list");
@@ -92,11 +92,7 @@ function addSearchTermToHistory(searchTerm) {
 }
 
 function buildTodayHtml(data) {
-  var date = dayjs(data.dt * 1000).tz(data.timezone).format("M/D/YYYY");
-  var iconUrl =
-    "https://openweathermap.org/img/wn/" +
-    data.weather[0].icon +
-    "@2x.png";
+  var date = dayjs(data.dt * 1000).format("M/D/YYYY");
   var uvIndex = data.uvi;
   var uvIndexClass =
     uvIndex < 3
@@ -105,7 +101,7 @@ function buildTodayHtml(data) {
       ? "bg-warning"
       : "bg-danger";
   var todayHtml = `
-    <h2>${data.name} (${date}) <img src="${iconUrl}" alt="${data.weather[0].description}"></h2>
+    <h2>${data.name} (${date})</h2>
     <ul>
       <li>Temperature: ${data.main.temp} °F</li>
       <li>Humidity: ${data.main.humidity}%</li>
@@ -116,25 +112,18 @@ function buildTodayHtml(data) {
   return todayHtml;
 }
 
-// Build the HTML for the forecast
 function buildForecastHtml(data) {
   var forecastHtml = "";
   for (var i = 0; i < data.list.length; i++) {
     // Only show forecast data for 3:00 PM
     if (data.list[i].dt_txt.indexOf("15:00:00") !== -1) {
       var forecastDate = dayjs(data.list[i].dt * 1000)
-        .tz(data.city.timezone)
         .format("M/D/YYYY");
-      var forecastIconUrl =
-        "https://openweathermap.org/img/wn/" +
-        data.list[i].weather[0].icon +
-        "@2x.png";
       forecastHtml += `
         <div class="col-md-2 mb-3">
           <div class="card">
             <div class="card-body p-2">
               <h5>${forecastDate}</h5>
-              <img src="${forecastIconUrl}" alt="${data.list[i].weather[0].description}">
               <p>Temp: ${data.list[i].main.temp} °F</p>
               <p>Humidity: ${data.list[i].main.humidity}%</p>
             </div>
@@ -145,6 +134,7 @@ function buildForecastHtml(data) {
   }
   return forecastHtml;
 }
+
 
 // When the page loads
 function init() {
@@ -164,4 +154,3 @@ function init() {
 
 // Call the init function when the page loads
 init();
-
